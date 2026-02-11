@@ -17,29 +17,6 @@ def _():
 
 @app.cell
 def _(mo):
-    import random
-
-
-    # Create a state object that will store the index of the
-    # clicked button
-    get_state, set_state = mo.state(None)
-
-    # Create an mo.ui.array of buttons - a regular Python list won't work.
-    buttons = mo.ui.array(
-        [
-            mo.ui.button(
-                label="button " + str(i), on_change=lambda v, i=i: set_state(i)
-            )
-            for i in range(random.randint(2, 5))
-        ]
-    )
-
-    mo.hstack(buttons)
-    return
-
-
-@app.cell
-def _(mo):
     sliders = mo.ui.array(
         [
             mo.ui.slider(start=0, stop=100, label="Start", value = 0),
@@ -57,14 +34,21 @@ def _(mo, sliders):
 
 
 @app.cell
-def _(np, pd):
-    x = np.linspace(start=0, stop=100, num=100, dtype=float)
+def _(sliders):
+    slider_values = sliders.value
+    print(slider_values[0], slider_values[1], slider_values[2])
+    return (slider_values,)
+
+
+@app.cell
+def _(np, pd, slider_values):
+    x = np.linspace(start=slider_values[0], stop=slider_values[1], num=slider_values[2], dtype=float)
     y = np.zeros_like(x) # dict of two np array
 
     data = {'x': x, 'y': y}
 
     df_numberline = pd.DataFrame(data)
-    df_numberline.describe()
+    df_numberline.head(3)
     return (df_numberline,)
 
 
